@@ -1,6 +1,6 @@
 {
   "name": "configmesh",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Release package for configmesh",
   "publishConfig": {
     "access": "public"

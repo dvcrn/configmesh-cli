@@ -1,0 +1,14 @@
+{
+  "name": "configmesh",
+  "version": "1.0.0",
+  "description": "Release package for configmesh",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "configmesh": "index.js"
+  },
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  }
+}

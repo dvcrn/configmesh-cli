@@ -1,0 +1,2 @@
+[tasks.publish]
+run = "cd npm/ && npm publish"

@@ -11,6 +11,8 @@ const REPO = 'configmesh-cli';
 const BIN = 'configmesh';
 const VERSION_ENV = 'CONFIGMESH_VERSION';
 const BASE_URL_ENV = 'CONFIGMESH_BASE_URL';
+const ARCH_ENV = 'CONFIGMESH_ARCH';
+const PLATFORM_ENV = 'CONFIGMESH_PLATFORM';
 
 function httpGet(url, { headers } = {}) {
   return new Promise((resolve, reject) => {
@@ -28,9 +30,24 @@ function httpGet(url, { headers } = {}) {
 
 function sha256(buf) { const h = crypto.createHash('sha256'); h.update(buf); return h.digest('hex'); }
 
+function parseChecksums(text) {
+  const map = new Map();
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  for (const line of lines) {
+    let m = line.match(/^([a-f0-9]{64})\s+(.+)$/i);
+    if (m) { map.set(m[2], m[1]); continue; }
+    m = line.match(/^sha256:([a-f0-9]{64})\s+(.+)$/i);
+    if (m) { map.set(m[2], m[1]); continue; }
+    m = line.match(/^SHA256\s+\((.+)\)\s+=\s+([a-f0-9]{64})$/i);
+    if (m) { map.set(m[1], m[2]); continue; }
+  }
+  return map;
+}
+
 (async function main() {
   try {
-    if (!['darwin', 'linux'].includes(process.platform)) {
+    const platform = process.env[PLATFORM_ENV] || process.platform;
+    if (!['darwin', 'linux'].includes(platform)) {
       console.error('configmesh: npm install supports macOS (darwin) and Linux only');
       process.exit(1);
     }
@@ -39,12 +56,15 @@ function sha256(buf) { const h = crypto.createHash('sha256'); h.update(buf); ret
     const version = process.env[VERSION_ENV] || pkg.version || '';
     if (!version) { console.error('postinstall: could not determine version'); process.exit(1); }
 
-    const arch = process.arch === 'x64' ? 'amd64' : (process.arch === 'arm64' ? 'arm64' : process.arch);
-    if (!['amd64','arm64'].includes(arch)) {
+    const detectedArch = process.arch === 'x64'
+      ? 'amd64'
+      : (process.arch === 'arm64' ? 'arm64' : (process.arch === 'arm' ? 'armv7' : process.arch));
+    const arch = process.env[ARCH_ENV] || detectedArch;
+    if (!['amd64','arm64','armv7'].includes(arch)) {
       console.error(`Unsupported arch: ${arch}`); process.exit(1);
     }
 
-    const assetName = `${BIN}_${version}_${process.platform}_${arch}.tar.gz`;
+    const assetName = `${BIN}_${version}_${platform}_${arch}.tar.gz`;
     const base = process.env[BASE_URL_ENV] || `https://github.com/${OWNER}/${REPO}/releases/download/${version}`;
     const url = `${base}/${assetName}`;
     const checksumsUrl = `${base}/checksums.txt`;
@@ -61,8 +81,8 @@ function sha256(buf) { const h = crypto.createHash('sha256'); h.update(buf); ret
     // checksum (best effort)
     try {
       const checksumsBuf = await httpGet(checksumsUrl, { headers });
-      const sumExpected = checksumsBuf.toString('utf8').split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
-        .map((l) => l.split(/[\s\t]+/)).find(([, name]) => name === assetName)?.[0];
+      const checksums = parseChecksums(checksumsBuf.toString('utf8'));
+      const sumExpected = checksums.get(assetName);
       if (!sumExpected) throw new Error('asset not in checksums.txt');
       const sumActual = sha256(tarGz);
       if (sumActual.toLowerCase() !== sumExpected.toLowerCase()) throw new Error('checksum mismatch');

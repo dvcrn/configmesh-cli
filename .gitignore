@@ -1,1 +1,3 @@
 npm/configmesh
+node_modules
+.tmp

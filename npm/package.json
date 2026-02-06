@@ -2,6 +2,9 @@
   "name": "configmesh",
   "version": "1.0.2",
   "description": "Release package for configmesh",
+  "dependencies": {
+    "semver": "^7.7.2"
+  },
   "publishConfig": {
     "access": "public"
   },

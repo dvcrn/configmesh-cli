@@ -22,6 +22,12 @@ Before using ConfigMesh, you need to authenticate:
 configmesh auth login
 ```
 
+or if you use dropbox:
+
+```
+configmesh auth dropbox login
+```
+
 This command will open your browser to complete the login process.
 
 ## Configuration
@@ -52,6 +58,12 @@ Plans define which files and directories to sync. Execute a plan to sync your co
 configmesh plan --passphrase xxxx
 ```
 
+or with dropbox
+
+```bash
+configmesh plan --passphrase xxxx --backend dropbox
+```
+
 This command will execute the plan defined in your configuration bundle, syncing the specified files and directories. The passphrase is required to decrypt your encrypted configuration files.
 
 ## Sync Command
@@ -60,6 +72,12 @@ Manually trigger a sync of your configurations:
 
 ```bash
 configmesh sync --passphrase xxxx
+```
+
+or with dropbox
+
+```bash
+configmesh sync --passphrase xxxx --backend dropbox
 ```
 
 This will upload any local changes and download any remote changes to your configuration files. The passphrase is required to encrypt and decrypt your files.

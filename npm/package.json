@@ -1,7 +1,7 @@
 {
   "name": "configmesh",
-  "version": "1.0.3",
-  "description": "Release package for configmesh",
+  "version": "1.1.0",
+  "description": "CLI interface for syncing with ConfigMesh",
   "dependencies": {
     "semver": "^7.7.2"
   },

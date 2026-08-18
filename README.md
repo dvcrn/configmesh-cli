@@ -1,12 +1,14 @@
-# ConfigMesh CLI
+# Synclet CLI (formerly ConfigMesh)
 
-ConfigMesh comes with a companion CLI tool that you can deploy to your server or run on your macOS machine. The CLI provides powerful automation capabilities for syncing your configuration files across your infrastructure.
+Synclet comes with a companion CLI tool that you can deploy to your server or run on your macOS machine. The CLI provides powerful automation capabilities for syncing your configuration files across your infrastructure.
 
-Get the ConfigMesh macOS app at https://configmesh.app
+Get the Synclet macOS app at https://synclet.dev
+
+> **Note:** ConfigMesh has been renamed to Synclet. The CLI still ships as the `configmesh` npm package and `configmesh` binary, so every command below is unchanged.
 
 ## Installation
 
-Install the ConfigMesh CLI globally via npm:
+Install the Synclet CLI globally via npm:
 
 ```bash
 npm install -g configmesh
@@ -16,7 +18,7 @@ This downloads a prebuilt binary at install time.
 
 ## Authentication
 
-Before using ConfigMesh, you need to authenticate:
+Before using Synclet, you need to authenticate:
 
 ```bash
 configmesh auth login
@@ -48,7 +50,7 @@ Creates a new configuration bundle in the current directory.
 configmesh config pull
 ```
 
-Downloads and syncs your configuration bundles from ConfigMesh.
+Downloads and syncs your configuration bundles from Synclet.
 
 ## Working with Plans
 

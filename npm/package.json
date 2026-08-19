@@ -1,6 +1,6 @@
 {
   "name": "synclet",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "CLI interface for syncing with Synclet (formerly ConfigMesh)",
   "homepage": "https://synclet.dev",
   "repository": {
@@ -13,6 +13,12 @@
     "dotfiles",
     "sync",
     "cli"
+  ],
+  "files": [
+    "index.js",
+    "postinstall.js",
+    "update_check.js",
+    "update_check_runner.js"
   ],
   "dependencies": {
     "semver": "^7.7.2"

@@ -7,12 +7,16 @@ const crypto = require("crypto");
 const { spawnSync } = require("child_process");
 
 const OWNER = "dvcrn";
-const REPO = "configmesh-cli";
-const BIN = "configmesh";
-const VERSION_ENV = "CONFIGMESH_VERSION";
-const BASE_URL_ENV = "CONFIGMESH_BASE_URL";
-const ARCH_ENV = "CONFIGMESH_ARCH";
-const PLATFORM_ENV = "CONFIGMESH_PLATFORM";
+const REPO = "synclet-cli";
+const BIN = "synclet";
+
+// Synclet was previously named ConfigMesh. Each override is read as SYNCLET_*
+// first and falls back to the legacy CONFIGMESH_* name.
+function envOverride(suffix) {
+  const current = process.env[`SYNCLET_${suffix}`];
+  if (current) return current;
+  return process.env[`CONFIGMESH_${suffix}`] || "";
+}
 
 function httpGet(url, { headers } = {}) {
   return new Promise((resolve, reject) => {
@@ -72,10 +76,10 @@ function parseChecksums(text) {
 
 (async function main() {
   try {
-    const platform = process.env[PLATFORM_ENV] || process.platform;
+    const platform = envOverride("PLATFORM") || process.platform;
     if (!["darwin", "linux"].includes(platform)) {
       console.error(
-        "configmesh: npm install supports macOS (darwin) and Linux only",
+        "synclet: npm install supports macOS (darwin) and Linux only",
       );
       process.exit(1);
     }
@@ -83,7 +87,7 @@ function parseChecksums(text) {
     const pkg = JSON.parse(
       fs.readFileSync(path.join(__dirname, "package.json"), "utf8"),
     );
-    const version = process.env[VERSION_ENV] || pkg.version || "";
+    const version = envOverride("VERSION") || pkg.version || "";
     if (!version) {
       console.error("postinstall: could not determine version");
       process.exit(1);
@@ -97,7 +101,7 @@ function parseChecksums(text) {
           : process.arch === "arm"
             ? "armv7"
             : process.arch;
-    const arch = process.env[ARCH_ENV] || detectedArch;
+    const arch = envOverride("ARCH") || detectedArch;
     if (!["amd64", "arm64", "armv7"].includes(arch)) {
       console.error(`Unsupported arch: ${arch}`);
       process.exit(1);
@@ -105,7 +109,7 @@ function parseChecksums(text) {
 
     const assetName = `${BIN}_${version}_${platform}_${arch}.tar.gz`;
     const base =
-      process.env[BASE_URL_ENV] ||
+      envOverride("BASE_URL") ||
       `https://github.com/${OWNER}/${REPO}/releases/download/${version}`;
     const url = `${base}/${assetName}`;
     const checksumsUrl = `${base}/checksums.txt`;

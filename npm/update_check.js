@@ -5,8 +5,8 @@ const https = require('https');
 const { spawn } = require('child_process');
 const semver = require('semver');
 
-const DEFAULT_PACKAGE_NAME = 'configmesh';
-const DEFAULT_UPDATE_COMMAND = 'npm install -g configmesh';
+const DEFAULT_PACKAGE_NAME = 'synclet';
+const DEFAULT_UPDATE_COMMAND = 'npm install -g synclet';
 
 const UPDATE_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const UPDATE_CHECK_TIMEOUT_MS = 1200;
@@ -15,6 +15,8 @@ const RUNNER_FILE = 'update_check_runner.js';
 
 function isDisabled() {
   return (
+    process.env.SYNCLET_NO_UPDATE_NOTICE === '1' ||
+    process.env.SYNCLET_NO_UPDATE_NOTICE === 'true' ||
     process.env.CONFIGMESH_NO_UPDATE_NOTICE === '1' ||
     process.env.CONFIGMESH_NO_UPDATE_NOTICE === 'true' ||
     process.env.NO_UPDATE_NOTIFIER === '1' ||

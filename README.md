@@ -4,14 +4,28 @@ Synclet comes with a companion CLI tool that you can deploy to your server or ru
 
 Get the Synclet macOS app at https://synclet.dev
 
-> **Note:** ConfigMesh has been renamed to Synclet. The CLI still ships as the `configmesh` npm package and `configmesh` binary, so every command below is unchanged.
+> **Note:** ConfigMesh is now Synclet. As of **2.0.0** the CLI ships as the
+> [`synclet`](https://www.npmjs.com/package/synclet) npm package and a `synclet`
+> binary, from this repository (`dvcrn/synclet-cli`, formerly `dvcrn/configmesh-cli`).
+>
+> The old `configmesh` npm package is deprecated and stays at 1.2.0. To move over:
+>
+> ```bash
+> npm uninstall -g configmesh
+> npm install -g synclet
+> ```
+>
+> Nothing else needs to change. Your existing `~/.config/configmesh` directory is
+> still used as-is, the `CONFIGMESH_*` environment variables still work, and
+> `--configmesh-url` / `--configmesh-token` / `--backend configmesh` remain
+> accepted as deprecated aliases for their `synclet` equivalents.
 
 ## Installation
 
 Install the Synclet CLI globally via npm:
 
 ```bash
-npm install -g configmesh
+npm install -g synclet
 ```
 
 This downloads a prebuilt binary at install time.
@@ -21,13 +35,13 @@ This downloads a prebuilt binary at install time.
 Before using Synclet, you need to authenticate:
 
 ```bash
-configmesh auth login
+synclet auth login
 ```
 
 or if you use dropbox:
 
 ```
-configmesh auth dropbox login
+synclet auth dropbox login
 ```
 
 This command will open your browser to complete the login process.
@@ -39,7 +53,7 @@ Set up a new configuration or pull existing configurations from remote:
 ### Initialize New Configuration
 
 ```bash
-configmesh config init
+synclet config init
 ```
 
 Creates a new configuration bundle in the current directory.
@@ -47,7 +61,7 @@ Creates a new configuration bundle in the current directory.
 ### Pull Remote Configurations
 
 ```bash
-configmesh config pull
+synclet config pull
 ```
 
 Downloads and syncs your configuration bundles from Synclet.
@@ -57,13 +71,13 @@ Downloads and syncs your configuration bundles from Synclet.
 Plans define which files and directories to sync. Execute a plan to sync your configurations:
 
 ```bash
-configmesh plan --passphrase xxxx
+synclet plan --passphrase xxxx
 ```
 
 or with dropbox
 
 ```bash
-configmesh plan --passphrase xxxx --backend dropbox
+synclet plan --passphrase xxxx --backend dropbox
 ```
 
 This command will execute the plan defined in your configuration bundle, syncing the specified files and directories. The passphrase is required to decrypt your encrypted configuration files.
@@ -73,13 +87,13 @@ This command will execute the plan defined in your configuration bundle, syncing
 Manually trigger a sync of your configurations:
 
 ```bash
-configmesh sync --passphrase xxxx
+synclet sync --passphrase xxxx
 ```
 
 or with dropbox
 
 ```bash
-configmesh sync --passphrase xxxx --backend dropbox
+synclet sync --passphrase xxxx --backend dropbox
 ```
 
 This will upload any local changes and download any remote changes to your configuration files. The passphrase is required to encrypt and decrypt your files.
@@ -91,28 +105,28 @@ A typical workflow looks like this:
 1. **Login:**
 
    ```bash
-   configmesh auth login
+   synclet auth login
    ```
 
 2. **Initialize or pull configuration:**
 
    ```bash
-   configmesh config init
+   synclet config init
    ```
 
    or
 
    ```bash
-   configmesh config pull
+   synclet config pull
    ```
 
 3. **Execute plan:**
 
    ```bash
-   configmesh plan --passphrase xxxx
+   synclet plan --passphrase xxxx
    ```
 
 4. **Sync changes:**
    ```bash
-   configmesh sync --passphrase xxxx
+   synclet sync --passphrase xxxx
    ```

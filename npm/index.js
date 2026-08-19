@@ -9,7 +9,7 @@ const {
   spawnUpdateCheckRunner,
 } = require("./update_check");
 
-const exe = process.platform === "win32" ? "configmesh.exe" : "configmesh";
+const exe = process.platform === "win32" ? "synclet.exe" : "synclet";
 const binPath = path.join(__dirname, exe);
 
 const PKG = (() => {
